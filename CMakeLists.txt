@@ -3,4 +3,4 @@ project(cs201hw3)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(cs201hw3 main.cpp)
+add_executable(cs201hw3 main.cpp SimplePerson.cpp SimplePerson.h SimplePhoneBook.cpp SimplePhoneBook.h)
