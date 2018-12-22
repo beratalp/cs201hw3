@@ -3,11 +3,13 @@
 //
 
 #include "SimplePhoneBook.h"
+#include "SimplePerson.h"
 #include <iostream>
 #include <string>
 
 
 using namespace std;
+
 
 PhoneBook::PhoneBook() {
     head = NULL;
@@ -15,8 +17,10 @@ PhoneBook::PhoneBook() {
 }
 
 PhoneBook::~PhoneBook() {
-    while(!isEmpty()){
-        removePerson(findPerson(head->t.getName())->t.getName());
+    while(head != NULL){
+        PersonNode *temp = head;
+        head = head->next;
+        delete temp;
     }
 }
 
@@ -57,17 +61,21 @@ void PhoneBook::operator=(const PhoneBook &right) {
 }
 
 bool PhoneBook::addPerson(const string name) {
-    string endString = "";
-    for(int i = 0; i < name.length(); i++){
-        char c = name[i];
-        if(c <= 'Z' && c >= 'A')
-            endString +=  c - ('Z' - 'z');
-        else
-            endString += c;
-    }
-    if(findPerson(endString) != NULL)
+    string endString1 = makeLower(name);
+    string endString2 = makeUpper(name);
+    if(findPerson(endString1) != NULL)
         return false;
-
+    if(findPerson(endString2) != NULL)
+        return false;
+    if(head == NULL){
+        PersonNode *newNode = new PersonNode;
+        Person newPerson = *new Person(name);
+        newNode->t = newPerson;
+        numberOfPeople++;
+        head = newNode;
+        head->next = NULL;
+        return true;
+    }
     PersonNode *newNode = new PersonNode;
     Person newPerson = *new Person(name);
     newNode->t = newPerson;
@@ -77,38 +85,72 @@ bool PhoneBook::addPerson(const string name) {
     return true;
 }
 
+
 bool PhoneBook::removePerson(const string name) {
-    string endString = "";
-    for(int i = 0; i < name.length(); i++){
-        char c = name[i];
-        if(c <= 'Z' && c >= 'A')
-            endString +=  c - ('Z' - 'z');
-        else
-            endString += c;
-    }
-    if(findPerson(endString) != NULL)
-        return false;
     PersonNode* temp = head;
-    while(temp->next != NULL){
-        if(temp->next->t.getName() == endString){
-            delete temp->next;
-            temp->next = temp->next->next;
+    PersonNode* cur = head->next;
+    while(cur != NULL) {
+        if(cur->t.getName() == name) {
+            temp->next = cur->next;
+            numberOfPeople--;
+            return true;
         }
-        temp = temp->next;
+        else {
+            temp = cur;
+            cur = cur->next;
+        }
     }
+    return false;
 }
 
+
 void PhoneBook::displayPeople() {
-    if(isEmpty()){
-        cout << "--EMPTY--";
+    if(numberOfPeople == 0){
+        cout << "--EMPTY--" << endl;
     }
     else{
         PersonNode* temp = head;
-        while(temp->next != NULL){
+        while(temp != NULL) {
             cout << "Person " << temp->t.getName() << endl;
             temp = temp->next;
         }
     }
 }
 
-PersonNode* PhoneBook::findPerson(string name) {}
+PhoneBook::PersonNode* PhoneBook::findPerson(string name) {
+    if(head == NULL)
+        return NULL;
+    PersonNode* temp = head;
+    while(temp != NULL){
+        if(name == temp->t.getName())
+            return temp;
+        temp = temp->next;
+    }
+    return NULL;
+}
+
+string PhoneBook::makeLower(string str) {
+    string endString = "";
+    for(int i = 0; i < str.length(); i++){
+        char c = str[i];
+        if(c <= 'Z' && c >= 'A')
+            endString +=  c - ('Z' - 'z');
+        else
+            endString += c;
+    }
+    return endString;
+}
+
+string PhoneBook::makeUpper(string str) {
+    string endString = "";
+    for(int i = 0; i < str.length(); i++){
+        char c = str[i];
+        if(c <= 'z' && c >= 'a')
+            endString +=  c + ('Z' - 'z');
+        else
+            endString += c;
+    }
+    return endString;
+}
+
+

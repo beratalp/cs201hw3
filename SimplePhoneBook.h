@@ -24,8 +24,8 @@ private:
     int numberOfPeople;
 
     PersonNode* findPerson(string name);
-    bool isEmpty();
-    char makeLower(char c);
+    string makeLower(string str);
+    string makeUpper(string str);
 
 };
 
