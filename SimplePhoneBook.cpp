@@ -61,8 +61,23 @@ void PhoneBook::operator=(const PhoneBook &right) {
 }
 
 bool PhoneBook::addPerson(const string name) {
-    string endString1 = makeLower(name);
-    string endString2 = makeUpper(name);
+    string endString1 = "";
+    string endString2 = "";
+    for(int i = 0; i < name.length(); i++){
+        char c = name[i];
+        if(c <= 'Z' && c >= 'A')
+            endString1 +=  c - ('Z' - 'z');
+        else
+            endString1 += c;
+    }
+
+    for(int i = 0; i < name.length(); i++){
+        char c = name[i];
+        if(c <= 'z' && c >= 'a')
+            endString2 +=  c + ('Z' - 'z');
+        else
+            endString2 += c;
+    }
     if(findPerson(endString1) != NULL)
         return false;
     if(findPerson(endString2) != NULL)
@@ -129,28 +144,5 @@ PhoneBook::PersonNode* PhoneBook::findPerson(string name) {
     return NULL;
 }
 
-string PhoneBook::makeLower(string str) {
-    string endString = "";
-    for(int i = 0; i < str.length(); i++){
-        char c = str[i];
-        if(c <= 'Z' && c >= 'A')
-            endString +=  c - ('Z' - 'z');
-        else
-            endString += c;
-    }
-    return endString;
-}
-
-string PhoneBook::makeUpper(string str) {
-    string endString = "";
-    for(int i = 0; i < str.length(); i++){
-        char c = str[i];
-        if(c <= 'z' && c >= 'a')
-            endString +=  c + ('Z' - 'z');
-        else
-            endString += c;
-    }
-    return endString;
-}
 
 

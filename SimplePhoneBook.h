@@ -22,11 +22,7 @@ private:
     };
     PersonNode *head;
     int numberOfPeople;
-
     PersonNode* findPerson(string name);
-    string makeLower(string str);
-    string makeUpper(string str);
-
 };
 
 #endif
